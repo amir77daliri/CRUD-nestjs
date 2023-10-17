@@ -10,20 +10,29 @@ export class ProductsService {
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
   ) {}
-
+  
   async findAll() {
     return await this.productsRepository.find()
   }
 
+  async saveProductsFromTask( products : Product[] ) {
+    try {
+      await this.productsRepository.save(products)
+      return "add successfully"
+    } catch (error) {
+      return {msg: 'failed to add', error}
+    }
+  }
+  
   async findById(id : number) {
     return await this.productsRepository.findOneBy({id})
   }
 
-  async createProduct(data: Product): Promise<Product | string> {
+  async createProduct(data): Promise<Product | object> {
     try{
       return await this.productsRepository.save(data);
     }catch(err) {
-      return "input data is not correct"
+      return {msg:"input data is not correct", err}
     }
   }
 
@@ -45,6 +54,10 @@ export class ProductsService {
     const updatedProduct = Object.assign(product, data)
 
     return await this.productsRepository.save(updatedProduct)
-    
+  }
+
+  async deletAllProducts() :Promise<string>{
+    await this.productsRepository.delete({})
+    return 'all products deleted'
   }
 }

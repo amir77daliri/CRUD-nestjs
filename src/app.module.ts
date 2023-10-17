@@ -6,8 +6,14 @@ import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import Product from './entities/products.entity';
 
+import { ScheduleModule } from '@nestjs/schedule'
+
+import { TaskModule } from './task/task.module';
+
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [
+    ScheduleModule.forRoot(),
+    TypeOrmModule.forRoot({
     type: 'mysql',
     host: 'localhost',
     port: 3306,
@@ -17,7 +23,9 @@ import Product from './entities/products.entity';
     entities: [Product],
     synchronize: true
   }), 
-  ProductsModule],
+
+  ProductsModule, TaskModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
